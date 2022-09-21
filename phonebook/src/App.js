@@ -13,37 +13,53 @@ const App = () => {
   const [searchField, setSearchField] = useState('')
   const [message, setMessage] = useState(null)
   const [messageClass, setMessageClass] = useState("")
+  // const [checkConfirm, setCheckConfirm] = useState(true)
 
   const addName = (event) => {
+    // console.log(checkConfirm)
     event.preventDefault()
     const duplicateName = persons.filter(person => person.name.toLowerCase() === newName.toLowerCase())
     const nameObject = {
       name: newName,
       number: newNumber
       }
+    // if (newName.length === 0) {
+    //   setMessageClass('errorMessage')
+    //   setMessage('Missing name field')
+    //   setTimeout(() => {
+    //     setMessage(null)
+    //   }, 3000)
+    // }
     if (duplicateName.length === 0) {
       Backend
         .newEntry(nameObject)
         .then(name => {
           setPersons(persons.concat(name))
+          setNewName('')
+          setNewNumber('')
+          setMessageClass('successAdd')
+          setMessage(`Added ${newName}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
         })
-      setNewName('')
-      setNewNumber('')
-      setMessageClass('successAdd')
-      setMessage(`Added ${newName}`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 2000)
+        .catch(error => {
+          setNewName('')
+          setNewNumber('')
+          setMessageClass('errorMessage')
+          setMessage(error.response.data.error)
+          // console.log(error.response.data)
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
+        })
     }
     else {
-      updateNumber(newName, nameObject)
-      setNewName('')
-      setNewNumber('')
-      setMessageClass('successAdd')
-      setMessage(`Updated ${newName}'s number`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 3000)
+      const person = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
+      const confirmDelete = window.confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)
+      if (confirmDelete) {
+        updateNumber(newName, nameObject)
+      }
     }
   }
 
@@ -67,22 +83,33 @@ const App = () => {
 
   const updateNumber = (name, newEntry) => {
     const person = persons.find(person => person.name.toLowerCase() === name.toLowerCase())
-    const confirmDelete = window.confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)
-    if (confirmDelete === true) {
+    // const confirmDelete = window.confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)
+    // if (confirmDelete) {
       Backend
         .updateEntry(person.id, newEntry)
         .then(returnedName => {
           setPersons(persons.map(entry => entry.name.toLowerCase() !== name.toLowerCase() ? entry : returnedName))
-        })
-        .catch((error) => {
-          setMessageClass('errorMessage')
-          setMessage(`Information of ${person.name} has already been removed from the server`)
+          setNewName('')
+          setNewNumber('')
+          setMessageClass('successAdd')
+          setMessage(`Updated ${newName}'s number`)
           setTimeout(() => {
             setMessage(null)
           }, 3000)
-          setPersons(persons.filter(entry => entry.id !== person.id))
         })
-    }
+        .catch((error) => {
+          setNewName('')
+          setNewNumber('')
+          setMessageClass('errorMessage')
+          setMessage(error.response.data.error)
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
+          // setPersons(persons.filter(entry => entry.id !== person.id))
+        })
+    // } else {
+    //   setCheckConfirm(confirmDelete)
+    // }
   }
 
   const handleInputChange = (event) => {

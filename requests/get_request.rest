@@ -1,1 +1,7 @@
-GET http://localhost:3001/api/persons
+GET http://localhost:3001/api/persons/63285252a75fb7ad62f8e507
+
+###
+GET https://fso-part3.onrender.com/
+
+###
+GET https://fso-part3.onrender.com/api/persons

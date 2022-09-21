@@ -1,7 +1,25 @@
-POST http://localhost:3001/api/notes
+POST http://localhost:3001/api/persons
 content-type: application/json
 
 {
-    "name": "jorma tikka",
-    "number": "040 123 4567"
+    "name": "adaa lovelace",
+    "number": "11-111111113"
+}
+
+###
+PUT http://localhost:3001/api/persons/632aed401901e11117aa8a39
+content-type: application/json
+
+{
+    "name": "",
+    "number": "050 142424"
+}
+
+###
+POST http://localhost:3001/api/persons
+content-type: application/json
+
+{
+    "name": "kalle",
+    "number": ""
 }
