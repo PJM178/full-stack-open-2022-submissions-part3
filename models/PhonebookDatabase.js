@@ -23,7 +23,7 @@ const phonebookSchema = new mongoose.Schema({
     maxLength: 50,
     validate: {
       validator: (v) => {
-        return /^(\d{3}|\d{2})-\d+$/.test(v);
+        return /^(\d{3}|\d{2})-\d+$/.test(v)
       },
       message: props => `${props.value} is not a valid phone number - start with "###-"`
     }
@@ -38,13 +38,13 @@ mongoose.connect(url)
   .then((result) => {
     console.log('connected to MongoDB')
     if (process.argv.length === 2) {
-        Person.find({}).then(result => {
-          console.log('Phonebook:')
-          result.forEach(person => {
-            console.log(person.name, person.number)
-          })
+      Person.find({}).then(result => {
+        console.log('Phonebook:')
+        result.forEach(person => {
+          console.log(person.name, person.number)
         })
-      }
+      })
+    }
   })
   .catch((err) => {
     console.log('error connecting to MongoDB:', err.message)
@@ -54,13 +54,12 @@ mongoose.connect(url)
 
 
 phonebookSchema.set('toJSON', {
-    transform: (document, returnObject) => {
-      returnObject.id = returnObject._id.toString()
-      delete returnObject._id
-      delete returnObject.__v
-    }
+  transform: (document, returnObject) => {
+    returnObject.id = returnObject._id.toString()
+    delete returnObject._id
+    delete returnObject.__v
+  }
 })
 
 
 module.exports = Person
-  

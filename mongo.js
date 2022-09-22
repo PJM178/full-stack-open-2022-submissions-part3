@@ -19,7 +19,6 @@ const Person = mongoose.model('Person', phonebookSchema)
 mongoose
   .connect(url)
   .then((result) => {
-  
     if (process.argv.length === 3) {
       Person.find({}).then(result => {
         console.log('Phonebook:')
@@ -47,4 +46,3 @@ mongoose
     console.log(err)
     return mongoose.connection.close()
   })
-  
